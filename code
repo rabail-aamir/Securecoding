@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building...'
+                // Add your build command here
+                sh 'mvn clean install'   // For Java projects
+                // sh 'npm install'      // For Node.js projects
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing...'
+                // Add your test command here
+                sh 'mvn test'            // For Java projects
+                // sh 'npm test'         // For Node.js projects
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying...'
+                // Add your deployment command here
+                sh 'scp target/myapp.jar user@server:/path/to/deploy'  // Example deploy
+            }
+        }
+        stage('Release') {
+            steps {
+                echo 'Releasing...'
+                // Add release actions (e.g., tag repo or trigger notifications)
+                sh 'git tag v1.0.0'
+                sh 'git push origin v1.0.0'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
